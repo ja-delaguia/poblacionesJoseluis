@@ -21,8 +21,9 @@ import modelo.Utilidades;
  * @author Usuario1
  */
 public class Poblaciones extends HttpServlet {
-   private ArrayList<String> provincias;
-   private String rutaFicheros;
+    
+    private ArrayList<String> provincias;
+    private String rutaFicheros;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -33,16 +34,16 @@ public class Poblaciones extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
    
-   public void init( ServletConfig config ) throws ServletException {
-       
-       provincias = new ArrayList<String>();
-       provincias.add("Albacete");
-       provincias.add("Ciudad Real");
-       provincias.add("Cuenca");
-       provincias.add("Guadalajara");
-       provincias.add("Toledo");
-       rutaFicheros = config.getServletContext().getRealPath("").concat(File.separator).concat("ficheros");
-   }
+    public void init(ServletConfig config) throws ServletException {
+
+        provincias = new ArrayList<String>();
+        provincias.add("Albacete");
+        provincias.add("Ciudad Real");
+        provincias.add("Cuenca");
+        provincias.add("Guadalajara");
+        provincias.add("Toledo");
+        rutaFicheros = config.getServletContext().getRealPath("").concat(File.separator).concat("ficheros");
+    }
    
    
        // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -57,11 +58,18 @@ public class Poblaciones extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-       ArrayList<String> pueblos = Utilidades.getPoblaciones(rutaFicheros.concat(File.separator).concat("Albacete.txt"));
-       request.setAttribute("provincias", provincias);
-       request.setAttribute("provincia", "Albacete");
-       request.setAttribute("pueblos", pueblos);
-       request.getRequestDispatcher("pueblos.jsp").forward(request, response);
+               String pro = request.getParameter("provincia");
+        
+        if (pro == null) {
+            pro = "Albacete";
+        }
+        
+        ArrayList<String> pueblos = Utilidades.getPoblaciones(rutaFicheros.concat(File.separator).concat(pro.replace(" ","").concat(".txt")));
+        
+        request.setAttribute("provincias", provincias);
+        request.setAttribute("provincia", pro);
+        request.setAttribute("pueblos", pueblos);
+        request.getRequestDispatcher("pueblos.jsp").forward(request, response);
     }
 
     /**
@@ -76,13 +84,14 @@ public class Poblaciones extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-      String pro = request.getParameter("provincia");
+        String pro = request.getParameter("provincias");
         
-      ArrayList<String> pueblos = Utilidades.getPoblaciones(rutaFicheros.concat(File.separator).concat(pro.replace(" ", "").concat(".txt")));
-      request.setAttribute("provincias", provincias);
-      request.setAttribute("provincia", pro);
-      request.setAttribute("pueblos", pueblos);
-      request.getRequestDispatcher("pueblos.jsp").forward(request, response);
+        ArrayList<String> pueblos = Utilidades.getPoblaciones(rutaFicheros.concat(File.separator).concat(pro.replace(" ","").concat(".txt")));
+        
+        request.setAttribute("provincias", provincias);
+        request.setAttribute("provincia", pro);
+        request.setAttribute("pueblos", pueblos);
+        request.getRequestDispatcher("pueblos.jsp").forward(request, response);
              
     }
 
